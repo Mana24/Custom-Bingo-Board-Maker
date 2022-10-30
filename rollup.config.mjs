@@ -3,8 +3,10 @@ import styles from "rollup-plugin-styles";
 import babel from '@rollup/plugin-babel';
 import resolve from '@rollup/plugin-node-resolve';
 import alias from '@rollup/plugin-alias';
+import serve from 'rollup-plugin-serve';
+import livereload from 'rollup-plugin-livereload';
 
-const production = !process.env.ROLLUP_WATCH;
+const rollupWatch = process.env.ROLLUP_WATCH;
 
 export default defineConfig({
    input: "src/main.js",
@@ -12,7 +14,7 @@ export default defineConfig({
       file: "dist/main.js",
       format: "iife",
       assetFileNames: "[name][extname]",
-      sourcemap: !production
+      sourcemap: true
    },
    plugins: [
       alias({
@@ -29,5 +31,7 @@ export default defineConfig({
          exclude: 'node_modules/**'
       }),
       styles({ mode: ['extract', 'styles.css'] }),
+      serve(), 
+      livereload({watch: "dist", verbose: true})
    ]
 })
