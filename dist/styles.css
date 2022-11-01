@@ -1,3 +1,147 @@
+.List {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ListItem {
+  display: flex;
+  gap: 0.4em;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgb(33, 33, 33);
+  box-shadow: -2px 2px 7px 1px rgba(0, 0, 0, 0.3);
+  margin: 0 0 0.6em 0;
+  padding: 0.4em;
+}
+.Dialog {
+  isolation: isolate;
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+.Dialog-overlay {
+  z-index: -1;
+  inset: 0;
+  position: fixed;
+  background-color: black;
+  opacity: 40%;
+}
+.Dialog-content {
+  width: 30em;
+  max-width: 90vw;
+  height: 20rem;
+  max-height: 90vh;
+  background-color: rgb(44, 44, 44);
+  box-shadow: -4px 4px 20px 0px rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
+  padding: 0.6em;
+  position: relative;
+}
+.Dialog .Dialog-close-btn {
+  position: absolute;
+  top: 0.4em;
+  right: 0.4em;
+}
+.Dialog .Dialog-outside-content {
+  width: 100%;
+  height: 100%;
+}
+.App {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  gap: 0.5em;
+}
+.App-list-container {
+  width: min(27em, 90vw);
+  min-height: 20em;
+  background-color: rgb(44, 44, 44);
+  box-shadow: -4px 4px 20px 0px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  padding: 1em;
+}
+.App-list-controls {
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+.App-list-controls input {
+  flex: 1;
+  height: 2em;
+}
+.App-list-controls button {
+  margin-left: auto;
+}
+.App-import-form {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5em;
+}
+.App-import-form textarea {
+  width: 100%;
+  height: 100%;
+}
+.App-import-form h2 {
+  margin: 0.2em 0;
+}
+@import url("https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&display=swap");
+#app {
+  width: 100%;
+}
+
 body {
-  background-color: rgb(55, 55, 55);
+  font-family: "Kanit", sans-serif;
+  background-color: rgb(33, 33, 33);
+  color: white;
+  min-height: 100vh;
+  display: flex;
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+h1 {
+  font-weight: 600;
+}
+
+button {
+  --button-color: 300 100% 25%;
+  --button-color-dark: 300 100% 15%;
+  --button-color-light: 330 100% 35%;
+  font-size: 1.1rem;
+  padding: 0.3em 0.5em;
+  background-color: hsl(var(--button-color));
+  color: white;
+  border: none;
+  box-shadow: 2px 2px 7px 2px hsl(var(--button-color-dark)/50%);
+  cursor: pointer;
+  transition: box-shadow 100ms;
+}
+button:active {
+  box-shadow: 0px 0px 7px 0px hsl(var(--button-color-light)/70%);
+}
+
+.danger-btn {
+  --button-color: 350, 88%, 39%;
+  --button-color-dark: 350, 88%, 24%;
+  --button-color-light: 350, 88%, 54%;
+}
+
+input, textarea {
+  background-color: rgb(22, 22, 22);
+  color: white;
+  border: solid rgb(62, 62, 62) 2px;
 }

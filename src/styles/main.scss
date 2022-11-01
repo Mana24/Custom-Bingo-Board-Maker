@@ -1,0 +1,56 @@
+@import url("https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&display=swap");
+
+#app {
+   width: 100%;
+}
+
+body {
+   font-family: "Kanit", sans-serif;
+
+   background-color: rgb(33, 33, 33);
+   color: white;
+
+   min-height: 100vh;
+   display: flex;
+   margin: 0;
+}
+
+p {
+   margin: 0;
+}
+
+h1 {
+   font-weight: 600;
+}
+
+button {
+   --button-color: 300 100% 25%;
+   --button-color-dark: 300 100% 15%;
+   --button-color-light: 330 100% 35%;
+
+   font-size: 1.1rem;
+   padding: 0.3em 0.5em;
+   background-color: hsl(var(--button-color));
+   color: white;
+   border: none;
+   box-shadow: 2px 2px 7px 2px hsl(var(--button-color-dark) / 50%);
+   cursor: pointer;
+   transition: box-shadow 100ms;
+
+   &:active {
+      box-shadow: 0px 0px 7px 0px hsl(var(--button-color-light) / 70%);
+   }
+}
+
+.danger-btn {
+   --button-color: 350, 88%, 39%;
+   --button-color-dark: 350, 88%, 24%;
+   --button-color-light: 350, 88%, 54%;
+}
+
+input, textarea {
+   background-color: rgb(22, 22, 22);
+   color: white;
+
+   border: solid rgb(62, 62, 62) 2px;
+}

@@ -5,6 +5,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import alias from '@rollup/plugin-alias';
 import serve from 'rollup-plugin-serve';
 import livereload from 'rollup-plugin-livereload';
+import commonjs from '@rollup/plugin-commonjs';
 
 const rollupWatch = process.env.ROLLUP_WATCH;
 
@@ -26,12 +27,13 @@ export default defineConfig({
          ]
       }),
       resolve({ browser: true }),
+      commonjs(),
       babel({
          babelHelpers: 'bundled',
          exclude: 'node_modules/**'
       }),
       styles({ mode: ['extract', 'styles.css'] }),
       serve(), 
-      livereload({watch: "dist", verbose: true})
+      rollupWatch ? livereload({watch: "dist", verbose: true}) : null
    ]
 })

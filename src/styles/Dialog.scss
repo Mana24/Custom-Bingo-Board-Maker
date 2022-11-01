@@ -1,0 +1,42 @@
+.Dialog {
+   isolation: isolate;
+   position: absolute;
+   inset: 0;
+   display: grid;
+   place-items: center;
+
+   &-overlay {
+      z-index: -1;
+      inset: 0;
+      position: fixed;
+      background-color: black;
+      opacity: 40%;
+   }
+
+   &-content {
+      width: 30em;
+      max-width: 90vw;
+
+      height: 20rem;
+      max-height: 90vh;
+
+      background-color: rgb(44, 44, 44);
+      box-shadow: -4px 4px 20px 0px rgba(0, 0, 0, 0.3);
+
+      box-sizing: border-box;
+      padding: 0.6em;
+
+      position: relative;
+   }
+
+   .Dialog-close-btn {
+      position: absolute;
+      top: 0.4em;
+      right: 0.4em;
+   }
+
+   .Dialog-outside-content {
+      width: 100%;
+      height: 100%;
+   }
+}

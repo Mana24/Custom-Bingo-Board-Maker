@@ -1,3 +1,96 @@
+import { useInput } from "./hooks/useInput.jsx";
+import { useDialog } from "./hooks/useDialog.jsx";
+import { useState, useMemo } from "preact/hooks";
+import List from "./List.jsx";
+import Dialog from "./Dialog.jsx";
+
+import "./styles/App.scss";
+
 export default function App() {
-   return <h1>Hello World 100</h1>
+  const [bingoSquares, setBingoSquares] = useState(['farm STS', 'acquire FUCKING HAT', "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur, reprehenderit porro maxime voluptatibus ipsa quod vel deleniti, qui odio incidunt error ratione sapiente. Dignissimos quidem vero, voluptatem aperiam laboriosam corrupti!"]);
+  const [itemInput, setItemInput, handleItemInputChange] = useInput("");
+  const [importInput, setImportInput, handleImportInputChange] = useInput("");
+  const [importError, setImportError] = useState("");
+  const { dialogOpen, openDialog, closeDialog } = useDialog(true, () => {
+    setImportInput("");
+    setImportError("");
+  });
+  const jsonSquares = useMemo(
+    () => JSON.stringify(bingoSquares.map((v) => ({ name: v }))),
+    [bingoSquares]
+  );
+
+
+  const handleAddSubmit = (e) => {
+    e.preventDefault();
+    if (itemInput.trim() === "") return;
+    // Add item
+    setBingoSquares([...bingoSquares, itemInput]);
+    setItemInput("");
+  };
+
+  const removeItem = (index) => {
+    const newSquares = [...bingoSquares];
+    newSquares.splice(index, 1);
+    setBingoSquares(newSquares);
+  };
+
+  const exportSquares = () => {
+    navigator.clipboard.writeText(jsonSquares);
+  };
+
+  const tryImportBingoSquares = (jsonString) => {
+    let squares;
+    try {
+      squares = JSON.parse(jsonString);
+    } catch {
+      return "Invalid JSON";
+    }
+    if (!Array.isArray(squares)) return "Unexpected Value. Expected an array";
+    if (!squares.every((item) => item.name))
+      return "Unexpected Value. Every item must have a valid name property";
+
+    setBingoSquares(squares.map((item) => item.name));
+  };
+
+  const handleImportSubmit = (e) => {
+    e.preventDefault();
+    const error = tryImportBingoSquares(importInput);
+    if (error) {
+      setImportError(error);
+    } else {
+      closeDialog();
+    }
+  };
+
+  return (
+    <div className="App">
+      <h1 className="App-title">Custom Bingosync Board Maker</h1>
+      <p>Square count: {bingoSquares.length}</p>
+      <div className="App-list-container">
+        <List items={bingoSquares} removeItem={removeItem} />
+        <form className="App-list-controls" onSubmit={handleAddSubmit}>
+          <label htmlFor="AddSquare">Add a bingo square:</label>
+          <input
+            id="AddSquare"
+            type="text"
+            value={itemInput}
+            onInput={handleItemInputChange}
+            placeholder="e.g. Farm STS"
+          />
+          <button type="submit">Add</button>
+        </form>
+      </div>
+      <button onClick={openDialog}>Import Squares</button>
+      <button onClick={exportSquares}>Export squares to clipboard</button>
+      <Dialog dialogOpen={dialogOpen} close={closeDialog}>
+        <form className="App-import-form" onSubmit={handleImportSubmit}>
+          <h2>Import bingo squares from JSON</h2>
+          <textarea value={importInput} onInput={handleImportInputChange} />
+          {importError ? <p>Import Error: {importError}</p> : null}
+          <button type="submit">Import</button>
+        </form>
+      </Dialog>
+    </div>
+  );
 }
