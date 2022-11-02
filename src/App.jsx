@@ -3,8 +3,10 @@ import { useDialog } from "./hooks/useDialog.jsx";
 import { useState, useMemo } from "preact/hooks";
 import List from "./List.jsx";
 import Dialog from "./Dialog.jsx";
+import githubLogo from "../assets/iconmonstr-github-1.svg";
 
 import "./styles/App.scss";
+
 
 export default function App() {
   // const [bingoSquares, setBingoSquares] = useState([
@@ -72,7 +74,11 @@ export default function App() {
   return (
     <div className="App">
       <h1 className="App-title">Custom Bingosync Board Maker</h1>
-      <p>This is a small app for <a href="https://bingosync.com">bingosync.com</a> to make custom bingo boards for you instead of writing the JSON by hand</p>
+      <p className="App-description">
+        This is a small app for{" "}
+        <a href="https://bingosync.com">bingosync.com</a> to make custom bingo
+        boards for you instead of writing the JSON by hand
+      </p>
       <div className="App-list-container">
         <List items={bingoSquares} removeItem={removeItem} />
         <form className="App-list-controls" onSubmit={handleAddSubmit}>
@@ -88,10 +94,14 @@ export default function App() {
         </form>
       </div>
       <div className="App-controls">
-      <button onClick={openDialog}>Import Squares</button>
-      <button onClick={exportSquares}>Export squares to clipboard</button>
+        <button onClick={openDialog}>Import Squares</button>
+        <button onClick={exportSquares}>Export squares to clipboard</button>
       </div>
       <p>Square count: {bingoSquares.length}</p>
+      <a className="App-repo-link" href="https://github.com/Mana24/Custom-Bingo-Board-Maker">
+        <img className="App-github-icon" src={githubLogo}></img>
+        <p>Github</p>
+      </a>
       <Dialog dialogOpen={dialogOpen} close={closeDialog}>
         <form className="App-import-form" onSubmit={handleImportSubmit}>
           <h2>Import bingo squares from JSON</h2>
