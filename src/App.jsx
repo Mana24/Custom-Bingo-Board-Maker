@@ -1,6 +1,6 @@
 import { useInput } from "./hooks/useInput.jsx";
 import { useDialog } from "./hooks/useDialog.jsx";
-import { useState, useMemo } from "preact/hooks";
+import { useState, useRef } from "preact/hooks";
 import List from "./List.jsx";
 import Dialog from "./Dialog.jsx";
 import githubLogo from "../assets/iconmonstr-github-1.svg";
@@ -16,6 +16,7 @@ export default function App() {
   // ]);
   const [bingoSquares, setBingoSquares] = useState([]);
   const [itemInput, setItemInput, handleItemInputChange] = useInput("");
+  const itemInputRef = useRef();
   const [importInput, setImportInput, handleImportInputChange] = useInput("");
   const [importError, setImportError] = useState("");
   const { dialogOpen, openDialog, closeDialog } = useDialog(false, () => {
@@ -33,6 +34,7 @@ export default function App() {
     // Add item
     setBingoSquares([...bingoSquares, itemInput]);
     setItemInput("");
+     itemInputRef.current.scrollIntoView({behavior: "smooth", block: "start"})
   };
 
   const removeItem = (index) => {
@@ -86,9 +88,10 @@ export default function App() {
           <input
             id="AddSquare"
             type="text"
-            value={itemInput}
-            onInput={handleItemInputChange}
             placeholder="e.g. Farm STS"
+            value={itemInput}
+            ref={itemInputRef}
+            onInput={handleItemInputChange}
           />
           <button type="submit">Add</button>
         </form>
