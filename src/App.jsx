@@ -7,19 +7,23 @@ import Dialog from "./Dialog.jsx";
 import "./styles/App.scss";
 
 export default function App() {
-  const [bingoSquares, setBingoSquares] = useState(['farm STS', 'acquire FUCKING HAT', "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur, reprehenderit porro maxime voluptatibus ipsa quod vel deleniti, qui odio incidunt error ratione sapiente. Dignissimos quidem vero, voluptatem aperiam laboriosam corrupti!"]);
+  // const [bingoSquares, setBingoSquares] = useState([
+  //   "farm STS",
+  //   "acquire FUCKING HAT",
+  //   "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur, reprehenderit porro maxime voluptatibus ipsa quod vel deleniti, qui odio incidunt error ratione sapiente. Dignissimos quidem vero, voluptatem aperiam laboriosam corrupti!",
+  // ]);
+  const [bingoSquares, setBingoSquares] = useState([]);
   const [itemInput, setItemInput, handleItemInputChange] = useInput("");
   const [importInput, setImportInput, handleImportInputChange] = useInput("");
   const [importError, setImportError] = useState("");
-  const { dialogOpen, openDialog, closeDialog } = useDialog(true, () => {
+  const { dialogOpen, openDialog, closeDialog } = useDialog(false, () => {
     setImportInput("");
     setImportError("");
   });
-  const jsonSquares = useMemo(
-    () => JSON.stringify(bingoSquares.map((v) => ({ name: v }))),
-    [bingoSquares]
-  );
-
+  // const jsonSquares = useMemo(
+  //   () => JSON.stringify(bingoSquares.map((v) => ({ name: v }))),
+  //   [bingoSquares]
+  // );
 
   const handleAddSubmit = (e) => {
     e.preventDefault();
@@ -36,7 +40,9 @@ export default function App() {
   };
 
   const exportSquares = () => {
-    navigator.clipboard.writeText(jsonSquares);
+    navigator.clipboard.writeText(
+      JSON.stringify(bingoSquares.map((v) => ({ name: v })))
+    );
   };
 
   const tryImportBingoSquares = (jsonString) => {
@@ -66,7 +72,7 @@ export default function App() {
   return (
     <div className="App">
       <h1 className="App-title">Custom Bingosync Board Maker</h1>
-      <p>Square count: {bingoSquares.length}</p>
+      <p>This is a small app for <a href="https://bingosync.com">bingosync.com</a> to make custom bingo boards for you instead of writing the JSON by hand</p>
       <div className="App-list-container">
         <List items={bingoSquares} removeItem={removeItem} />
         <form className="App-list-controls" onSubmit={handleAddSubmit}>
@@ -81,12 +87,21 @@ export default function App() {
           <button type="submit">Add</button>
         </form>
       </div>
+      <div className="App-controls">
       <button onClick={openDialog}>Import Squares</button>
       <button onClick={exportSquares}>Export squares to clipboard</button>
+      </div>
+      <p>Square count: {bingoSquares.length}</p>
       <Dialog dialogOpen={dialogOpen} close={closeDialog}>
         <form className="App-import-form" onSubmit={handleImportSubmit}>
           <h2>Import bingo squares from JSON</h2>
-          <textarea value={importInput} onInput={handleImportInputChange} />
+          <textarea
+            value={importInput}
+            onInput={handleImportInputChange}
+            placeholder={
+              '[\n\t{"name":"Farm STS"},\n\t{"name":"Wear a hat"},\n\t...\n]'
+            }
+          />
           {importError ? <p>Import Error: {importError}</p> : null}
           <button type="submit">Import</button>
         </form>

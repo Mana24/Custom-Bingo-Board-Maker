@@ -64,6 +64,7 @@
   display: flex;
   flex-flow: column;
   justify-content: space-between;
+  margin-top: 1em;
   padding: 1em;
 }
 .App-list-controls {
@@ -78,6 +79,9 @@
 }
 .App-list-controls button {
   margin-left: auto;
+}
+.App-controls button {
+  margin: 0 1em;
 }
 .App-import-form {
   width: 100%;
@@ -94,6 +98,11 @@
 }
 .App-import-form h2 {
   margin: 0.2em 0;
+}
+.App a {
+  text-decoration: none;
+  font-weight: 600;
+  color: rgb(178, 25, 178);
 }
 @import url("https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&display=swap");
 #app {
