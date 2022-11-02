@@ -7,13 +7,21 @@
    align-items: center;
    gap: 0.5em;
 
+   &-description {
+      a {
+         text-decoration: none;
+         font-weight: 600;
+         color: rgb(178, 25, 178);
+      }
+   }
+
    &-list-container {
       width: min(27em, 90vw);
       min-height: 20em;
 
       background-color: rgb(44, 44, 44);
       box-shadow: -4px 4px 20px 0px rgba(0, 0, 0, 0.3);
-      
+
       display: flex;
       flex-flow: column;
       justify-content: space-between;
@@ -63,9 +71,16 @@
       }
    }
 
-   a {
+   &-repo-link {
+      display: flex;
+      align-items: center;
+      gap: 0.4em;
+
       text-decoration: none;
-      font-weight: 600;
-      color: rgb(178, 25, 178)
+      color: white;
+
+      position: fixed;
+      bottom: 1em;
+      right: 1em;
    }
 }
