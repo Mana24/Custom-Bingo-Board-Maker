@@ -6,7 +6,7 @@ import Dialog from "./Dialog.jsx";
 import githubLogo from "../assets/iconmonstr-github-1.svg";
 
 import "./styles/App.scss";
-
+import ImportForm from "./ImportForm.jsx";
 
 export default function App() {
   // const [bingoSquares, setBingoSquares] = useState([
@@ -23,10 +23,6 @@ export default function App() {
     setImportInput("");
     setImportError("");
   });
-  // const jsonSquares = useMemo(
-  //   () => JSON.stringify(bingoSquares.map((v) => ({ name: v }))),
-  //   [bingoSquares]
-  // );
 
   const handleAddSubmit = (e) => {
     e.preventDefault();
@@ -34,7 +30,7 @@ export default function App() {
     // Add item
     setBingoSquares([...bingoSquares, itemInput]);
     setItemInput("");
-     itemInputRef.current.scrollIntoView({behavior: "smooth", block: "start"})
+    itemInputRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   const removeItem = (index) => {
@@ -47,30 +43,6 @@ export default function App() {
     navigator.clipboard.writeText(
       JSON.stringify(bingoSquares.map((v) => ({ name: v })))
     );
-  };
-
-  const tryImportBingoSquares = (jsonString) => {
-    let squares;
-    try {
-      squares = JSON.parse(jsonString);
-    } catch {
-      return "Invalid JSON";
-    }
-    if (!Array.isArray(squares)) return "Unexpected Value. Expected an array";
-    if (!squares.every((item) => item.name))
-      return "Unexpected Value. Every item must have a valid name property";
-
-    setBingoSquares(squares.map((item) => item.name));
-  };
-
-  const handleImportSubmit = (e) => {
-    e.preventDefault();
-    const error = tryImportBingoSquares(importInput);
-    if (error) {
-      setImportError(error);
-    } else {
-      closeDialog();
-    }
   };
 
   return (
@@ -88,6 +60,7 @@ export default function App() {
           <input
             id="AddSquare"
             type="text"
+            autoComplete="off"
             placeholder="e.g. Farm STS"
             value={itemInput}
             ref={itemInputRef}
@@ -101,23 +74,23 @@ export default function App() {
         <button onClick={exportSquares}>Export squares to clipboard</button>
       </div>
       <p>Square count: {bingoSquares.length}</p>
-      <a className="App-repo-link" href="https://github.com/Mana24/Custom-Bingo-Board-Maker">
+      <a
+        className="App-repo-link"
+        href="https://github.com/Mana24/Custom-Bingo-Board-Maker"
+      >
         <img className="App-github-icon" src={githubLogo}></img>
         <p>Github</p>
       </a>
       <Dialog dialogOpen={dialogOpen} close={closeDialog}>
-        <form className="App-import-form" onSubmit={handleImportSubmit}>
-          <h2>Import bingo squares from JSON</h2>
-          <textarea
-            value={importInput}
-            onInput={handleImportInputChange}
-            placeholder={
-              '[\n\t{"name":"Farm STS"},\n\t{"name":"Wear a hat"},\n\t...\n]'
-            }
-          />
-          {importError ? <p>Import Error: {importError}</p> : null}
-          <button type="submit">Import</button>
-        </form>
+        <ImportForm
+          input={importInput}
+          handleInput={handleImportInputChange}
+          error={importError}
+          setError={setImportError}
+          setSquares={setBingoSquares}
+          onSubmitSuccess={closeDialog}
+        >
+        </ImportForm>
       </Dialog>
     </div>
   );

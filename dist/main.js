@@ -1,3 +1,5 @@
+
+(function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
 (function () {
    'use strict';
 
@@ -88,6 +90,133 @@
 
    var img = "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='white' width='24' height='24' viewBox='0 0 24 24'%3e%3cpath d='M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z'/%3e%3c/svg%3e";
 
+   function Toggle({
+     toggleState,
+     setToggleState,
+     option1,
+     option2
+   }) {
+     const firstOptionActice = toggleState === option1;
+     const otherOption = firstOptionActice ? option2 : option1;
+     const handleClick = () => {
+       setToggleState(otherOption);
+     };
+     return o("div", {
+       className: "Toggle",
+       children: [o("button", {
+         className: `Toggle-btn ${firstOptionActice ? "Toggle-btn-active" : ""}`,
+         type: "button",
+         onClick: handleClick,
+         disabled: firstOptionActice,
+         children: option1
+       }), o("button", {
+         className: `Toggle-btn ${!firstOptionActice ? "Toggle-btn-active" : ""}`,
+         type: "button",
+         onClick: handleClick,
+         disabled: !firstOptionActice,
+         children: option2
+       })]
+     });
+   }
+
+   const dataShapes = {
+     Simple: {
+       example: '[\n\t"Farm STS",\n\t"Acquire a hat",\n\t...etc\n]',
+       process: jsonString => {
+         let squares;
+         try {
+           squares = JSON.parse(jsonString);
+         } catch {
+           throw "Invalid JSON";
+         }
+         if (!Array.isArray(squares)) throw "Unexpected Value. Expected an array";
+         if (!squares.every(item => typeof item === "string")) throw "Unexpected Value. Every item must be a string";
+         return squares;
+       }
+     },
+     Complex: {
+       example: '[\n\t{"name":"Farm STS"},\n\t{"name":"Wear a hat"},\n\t...\n]',
+       process: jsonString => {
+         let squares;
+         try {
+           squares = JSON.parse(jsonString);
+         } catch {
+           throw "Invalid JSON";
+         }
+         if (!Array.isArray(squares)) throw "Unexpected Value. Expected an array";
+         if (!squares.every(item => item.name)) throw "Unexpected Value. Every item must have a valid name property";
+         return squares.map(item => item.name);
+       }
+     }
+   };
+   function ImportForm({
+     input,
+     handleInput,
+     error,
+     setError,
+     setSquares,
+     onSubmitSuccess
+   }) {
+     const [importMode, setImportMode] = p("Replace"); // "add" || "replace"
+     const [dataShape, setDataShape] = p("Complex"); // "complex" || "simple"
+
+     const handleImportSubmit = e => {
+       e.preventDefault();
+       let squares;
+       try {
+         squares = dataShapes[dataShape].process(input);
+       } catch (error) {
+         setError(error);
+         return;
+       }
+       switch (importMode) {
+         case "Add":
+           setSquares(oldSquares => [...oldSquares, ...squares]);
+           break;
+         case "Replace":
+           setSquares(squares);
+           break;
+       }
+       onSubmitSuccess();
+     };
+     return o("form", {
+       className: "ImportForm",
+       onSubmit: handleImportSubmit,
+       children: [o("h2", {
+         children: "Import bingo squares from JSON"
+       }), o("div", {
+         className: "ImportForm-toggle-container",
+         children: [o("p", {
+           children: "Import Mode:"
+         }), o(Toggle, {
+           toggleState: importMode,
+           setToggleState: setImportMode,
+           option1: "Add",
+           option2: "Replace"
+         })]
+       }), o("div", {
+         className: "ImportForm-toggle-container",
+         children: [o("p", {
+           children: "Data Shape:"
+         }), o(Toggle, {
+           toggleState: dataShape,
+           setToggleState: setDataShape,
+           option1: "Complex",
+           option2: "Simple"
+         })]
+       }), o("textarea", {
+         value: input,
+         onInput: handleInput,
+         placeholder: dataShapes[dataShape].example
+       }), error ? o("p", {
+         children: ["Import Error: ", error]
+       }) : null, o("button", {
+         type: "submit",
+         children: "Import"
+       })]
+     });
+   }
+
    function App() {
      // const [bingoSquares, setBingoSquares] = useState([
      //   "farm STS",
@@ -107,11 +236,6 @@
        setImportInput("");
        setImportError("");
      });
-     // const jsonSquares = useMemo(
-     //   () => JSON.stringify(bingoSquares.map((v) => ({ name: v }))),
-     //   [bingoSquares]
-     // );
-
      const handleAddSubmit = e => {
        e.preventDefault();
        if (itemInput.trim() === "") return;
@@ -132,26 +256,6 @@
        navigator.clipboard.writeText(JSON.stringify(bingoSquares.map(v => ({
          name: v
        }))));
-     };
-     const tryImportBingoSquares = jsonString => {
-       let squares;
-       try {
-         squares = JSON.parse(jsonString);
-       } catch {
-         return "Invalid JSON";
-       }
-       if (!Array.isArray(squares)) return "Unexpected Value. Expected an array";
-       if (!squares.every(item => item.name)) return "Unexpected Value. Every item must have a valid name property";
-       setBingoSquares(squares.map(item => item.name));
-     };
-     const handleImportSubmit = e => {
-       e.preventDefault();
-       const error = tryImportBingoSquares(importInput);
-       if (error) {
-         setImportError(error);
-       } else {
-         closeDialog();
-       }
      };
      return o("div", {
        className: "App",
@@ -178,6 +282,7 @@
            }), o("input", {
              id: "AddSquare",
              type: "text",
+             autoComplete: "off",
              placeholder: "e.g. Farm STS",
              value: itemInput,
              ref: itemInputRef,
@@ -210,21 +315,13 @@
        }), o(Dialog, {
          dialogOpen: dialogOpen,
          close: closeDialog,
-         children: o("form", {
-           className: "App-import-form",
-           onSubmit: handleImportSubmit,
-           children: [o("h2", {
-             children: "Import bingo squares from JSON"
-           }), o("textarea", {
-             value: importInput,
-             onInput: handleImportInputChange,
-             placeholder: '[\n\t{"name":"Farm STS"},\n\t{"name":"Wear a hat"},\n\t...\n]'
-           }), importError ? o("p", {
-             children: ["Import Error: ", importError]
-           }) : null, o("button", {
-             type: "submit",
-             children: "Import"
-           })]
+         children: o(ImportForm, {
+           input: importInput,
+           handleInput: handleImportInputChange,
+           error: importError,
+           setError: setImportError,
+           setSquares: setBingoSquares,
+           onSubmitSuccess: closeDialog
          })
        })]
      });

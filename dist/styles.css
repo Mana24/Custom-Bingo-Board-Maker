@@ -14,6 +14,9 @@
   margin: 0 0 0.6em 0;
   padding: 0.4em;
 }
+.ListItem-content {
+  margin: 0;
+}
 .Dialog {
   isolation: isolate;
   position: absolute;
@@ -31,7 +34,7 @@
 .Dialog-content {
   width: 30em;
   max-width: 90vw;
-  height: 20rem;
+  height: 25rem;
   max-height: 90vh;
   background-color: rgb(44, 44, 44);
   box-shadow: -4px 4px 20px 0px rgba(0, 0, 0, 0.3);
@@ -88,22 +91,6 @@
 .App-controls button {
   margin: 0 1em;
 }
-.App-import-form {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-flow: column;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.5em;
-}
-.App-import-form textarea {
-  width: 100%;
-  height: 100%;
-}
-.App-import-form h2 {
-  margin: 0.2em 0;
-}
 .App-repo-link {
   display: flex;
   align-items: center;
@@ -113,6 +100,40 @@
   position: fixed;
   bottom: 1em;
   right: 1em;
+}
+.Toggle {
+  border-radius: 0.2em;
+  display: flex;
+  overflow-y: hidden;
+  max-height: 4em;
+}
+.Toggle-btn {
+  background-color: gray;
+  transition: background-color 200ms;
+}
+.Toggle-btn-active {
+  background-color: hsl(var(--button-color));
+}
+.ImportForm {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5em;
+}
+.ImportForm .ImportForm-toggle-container {
+  display: flex;
+  align-items: center;
+  margin-right: auto;
+}
+.ImportForm textarea {
+  width: 100%;
+  height: 100%;
+}
+.ImportForm h2 {
+  margin: 0.2em 0;
 }
 @import url("https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&display=swap");
 #app {
@@ -129,11 +150,12 @@ body {
 }
 
 p {
-  margin: 0;
+  margin: 0 1em;
 }
 
 h1 {
   font-weight: 600;
+  margin: 0.66em 1em;
 }
 
 button {
@@ -147,6 +169,7 @@ button {
   border: none;
   box-shadow: 2px 2px 7px 2px hsl(var(--button-color-dark)/50%);
   cursor: pointer;
+  user-select: none;
   transition: box-shadow 100ms;
 }
 button:active {

@@ -16,11 +16,12 @@ body {
 }
 
 p {
-   margin: 0;
+   margin: 0 1em;
 }
 
 h1 {
    font-weight: 600;
+   margin: 0.66em 1em;
 }
 
 button {
@@ -35,6 +36,7 @@ button {
    border: none;
    box-shadow: 2px 2px 7px 2px hsl(var(--button-color-dark) / 50%);
    cursor: pointer;
+   user-select: none;
    transition: box-shadow 100ms;
 
    &:active {
